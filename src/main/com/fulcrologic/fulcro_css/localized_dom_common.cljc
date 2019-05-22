@@ -1,7 +1,7 @@
 (ns com.fulcrologic.fulcro-css.localized-dom-common
   (:refer-clojure :exclude [map meta time set symbol filter])
   (:require
-    fulcro-css.css
+    com.fulcrologic.fulcro-css.css
     #?(:clj [cljs.tagged-literals :refer [->JSValue]])
     #?@(:cljs [[cljsjs.react]
                [cljsjs.react.dom]

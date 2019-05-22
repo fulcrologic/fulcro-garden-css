@@ -1,30 +1,28 @@
 (ns com.fulcrologic.fulcro-css.css-implementation
   "Implementation details for co-located CSS. Do not use these directly."
   ;; IMPORTANT: DO NOT INCLUDE GARDEN HERE!!!!
-  (:require [cljs.tagged-literals]
-            #?(:clj [garden.selectors :as gs])
-            [clojure.string :as str]))
+  (:require
+    [cljs.tagged-literals]
+    [garden.selectors :as gs]
+    [com.fulcrologic.fulcro.components :as comp]
+    [clojure.string :as str])
+  #?(:clj
+     (:import [garden.selectors CSSSelector])))
 
 ;; from core
 (defn cssify
   "Replaces slashes and dots with underscore."
   [str] (when str (str/replace str #"[./]" "_")))
 
-(defn fq-component [comp-class]
-  #?(:clj  (if (nil? (meta comp-class))
-             (str/replace (.getName comp-class) #"[_]" "-")
-             (str (:component-ns (meta comp-class)) "/" (:component-name (meta comp-class))))
-     :cljs (if-let [nm (.. comp-class -displayName)]
-             nm
-             "unknown/unknown")))
+(defn fq-component [comp-class] (comp/registry-key comp-class))
 
 (defn local-class
   "Generates a string name of a localized CSS class. This function combines the fully-qualified name of the given class
      with the (optional) specified name."
   ([comp-class]
-   (str (cssify (fq-component comp-class))))
+   (str (cssify (comp/registry-key comp-class))))
   ([comp-class nm]
-   (str (cssify (fq-component comp-class)) "__" (name nm))))
+   (str (cssify (comp/registry-key comp-class)) "__" (name nm))))
 
 (defn set-classname
   [m subclasses]
@@ -35,40 +33,15 @@
                                 (assoc :className subclasses)
                                 (dissoc :class)))))
 
-;; css
-#?(:clj (defn implements-protocol?
-          [x protocol protocol-key]
-          (if (fn? x)
-            (some? (-> x meta protocol-key))
-            (extends? protocol (class x)))))
-
 (defn CSS?
   "Returns true if the given component has css"
   [x]
-  #?(:clj  (implements-protocol? x cp/CSS :local-rules)
-     :cljs (implements? cp/CSS x)))
-
-(defn Global?
-  "Returns true if the component has global rules"
-  [x]
-  #?(:clj  (implements-protocol? x cp/Global :global-rules)
-     :cljs (implements? cp/Global x)))
-
-(defn get-global-rules
-  "Get the *raw* value from the global-rules of a component."
-  [component]
-  (if (Global? component)
-    #?(:clj  ((:global-rules (meta component)) component)
-       :cljs (global-rules component))
-    []))
+  (boolean (some-> x comp/component-options :css)))
 
 (defn get-local-rules
   "Get the *raw* value from the local-rules of a component."
   [component]
-  (if (CSS? component)
-    #?(:clj  ((:local-rules (meta component)) component)
-       :cljs (local-rules component))
-    []))
+  (or (some-> component comp/component-options :css) []))
 
 (defn prefixed-name?
   "Returns true if the given string starts with one of [. $ &$ &.]"
@@ -100,10 +73,7 @@
 (defn get-includes
   "Returns the list of components from the include-children method of a component"
   [component]
-  (if (CSS? component)
-    #?(:clj  ((:include-children (meta component)) component)
-       :cljs (include-children component))
-    []))
+  (or (some-> component comp/component-options :css-include) []))
 
 (defn get-nested-includes
   "Recursively finds all includes starting at the given component."
@@ -139,15 +109,14 @@
 (defn selector?
   [x]
   (try
-    #?(:clj  (= garden.selectors.CSSSelector (type x))
-       :cljs (= js/garden.selectors.CSSSelector (type x)))
-    (catch #?(:cljs :default :clj Throwable) e
+    (satisfies? gs/ICSSSelector x)
+    (catch #?(:cljs :default :clj Throwable) _
       false)))
 
 (defn get-selector-keywords
   "Gets all the keywords that are present in a selector"
   [selector]
-  (let [val        (:selector selector)
+  (let [val        (gs/css-selector selector)
         classnames (filter #(re-matches #"[.$].*" %) (str/split val #" "))]
     (map keyword classnames)))
 
@@ -162,8 +131,6 @@
 (defn get-classnames
   "Returns a map from user-given CSS rule names to localized names of the given component."
   [comp]
-  (let [local-class-keys  (get-class-keys (get-local-rules comp))
-        global-class-keys (map remove-prefix-kw (get-class-keys (get-global-rules comp)))
-        local-classnames  (zipmap (map remove-prefix-kw local-class-keys) (map #(kw->localized-classname comp %) local-class-keys))
-        global-classnames (zipmap global-class-keys (map name global-class-keys))]
-    (merge local-classnames global-classnames)))
+  (let [local-class-keys (get-class-keys (get-local-rules comp))
+        local-classnames (zipmap (map remove-prefix-kw local-class-keys) (map #(kw->localized-classname comp %) local-class-keys))]
+    local-classnames))

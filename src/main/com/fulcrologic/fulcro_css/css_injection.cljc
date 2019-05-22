@@ -1,6 +1,7 @@
 (ns com.fulcrologic.fulcro-css.css-injection
   (:require
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+    [com.fulcrologic.fulcro.application :as app]
     [clojure.spec.alpha :as s]
     [garden.core :as g]
     [edn-query-language.core :as eql]
@@ -8,6 +9,9 @@
     #?(:cljs [com.fulcrologic.fulcro.dom :as dom]
        :clj  [com.fulcrologic.fulcro.dom-server :as dom])))
 
+(defn error [& msg]
+  #?(:cljs (apply js/console.log msg)
+     :clj  (.println System/err (apply str msg))))
 (defn component-css-includes-with-depth [component breadth depth]
   (let [includes (css/get-includes component)]
     (-> (into []
@@ -40,7 +44,7 @@
                         (sort-by #(- (::depth %)) nodes))
         unique-nodes  (distinct (map ::component ordered-nodes))]
     (when-not query
-      (log/error "Auto-include was used for CSS, but the component had no query! No CSS Found."))
+      (error "Auto-include was used for CSS, but the component had no query! No CSS Found."))
     unique-nodes))
 
 (s/fdef find-css-nodes
@@ -64,7 +68,7 @@
       css)))
 
 (defsc StyleElement [this {:keys [order key]}]
-  {:componentDidMount (fn []
+  {:componentDidMount (fn [this]
                         (let [css (compute-css (comp/props this))]
                           (comp/set-state! this {:css css})))}
   ;; This ensures best performance. React doesn't check/diff it this way.
@@ -90,11 +94,18 @@
     (let [component (:component props)
           props     (cond-> props
                       (comp/component? component) (->
-                                                    (assoc :state-map (some-> component comp/component->state-map))
+                                                    (assoc :state-map (some-> component comp/any->app app/current-state))
                                                     (update :component comp/react-type)))]
       #?(:cljs (factory props)
          :clj  (dom/style {}
                  (compute-css props))))))
+
+#?(:cljs
+   (defn remove-from-dom "Remove the given element from the DOM by ID"
+     [id]
+     (if-let [old-element (.getElementById js/document id)]
+       (let [parent (.-parentNode old-element)]
+         (.removeChild parent old-element)))))
 
 #?(:clj
    (defn upsert-css
@@ -102,7 +113,7 @@
 
      Upsert-css not available for CLJ use. There is no DOM.  Use `compute-css` and manual embedding in your returned server page instead."
      [id options]
-     (log/error "Upsert-css not available for CLJ use. There is no DOM.  Use `compute-css` and manual embedding in your returned server page instead."))
+     (error "Upsert-css not available for CLJ use. There is no DOM.  Use `compute-css` and manual embedding in your returned server page instead."))
    :cljs
    (defn upsert-css
      "(Re)place the STYLE element with the provided ID on the document's low-level DOM with the co-located CSS of
@@ -112,7 +123,7 @@
 
      ONLY WORKS FOR CLJS, since otherwise there is no DOM to change."
      [id options]
-     (css/remove-from-dom id)
+     (remove-from-dom id)
      (let [style-ele (.createElement js/document "style")
            css       (compute-css options)]
        (set! (.-innerHTML style-ele) css)

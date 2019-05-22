@@ -1,9 +1,10 @@
 (ns com.fulcrologic.fulcro-css.localized-dom-spec
-  (:require-macros com.fulcrologic.fulcro-css.localized-dom-spec)
+  (:require-macros [com.fulcrologic.fulcro-css.localized-dom-spec :refer [check-kw-processing]])
   (:require
     [fulcro-spec.core :refer [specification assertions behavior provided when-mocking]]
     [com.fulcrologic.fulcro.dom :as adom]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
+    [com.fulcrologic.fulcro.application :as app]
     [com.fulcrologic.fulcro-css.localized-dom :as ldom :refer [div p span]]
     [cljsjs.react.dom.server]
     [clojure.string :as str]))
@@ -28,25 +29,29 @@
 (defsc SymbolicClassJSPropsComponent [this props] (let [props #js {:className "x"}] (ldom/div :.a#y props "Hello")))
 (defsc SymbolicClassNilPropsComponent [this props] (let [props nil] (ldom/div :.a#y props "Hello")))
 
-;; NOTE: There are some pathological cases that I'm just not bothering to support. E.g. a #js {:fulcro-css.css/classes #js [:.a]} as props
+(comment
+  (js/console.log (comp/registry-key NoKWComponent))
+  (adom/render-to-str (binding [comp/*app* (app/fulcro-app)] ((comp/factory NoPropsComponent) {})))
+  (adom/render-to-str ((comp/factory NoPropsComponment) {}))
+  )
 
 (specification "Contextual rendering with localized CSS"
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and no props:" NoPropsComponent "fulcro_client_localized-dom-spec_NoPropsComponent__a")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and nil props:" NilPropsComponent "fulcro_client_localized-dom-spec_NilPropsComponent__a")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and empty cljs props:" EmptyPropsComponent "fulcro_client_localized-dom-spec_EmptyPropsComponent__a")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and empty js props:" EmptyJSPropsComponent "fulcro_client_localized-dom-spec_EmptyJSPropsComponent__a")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and cljs props with class:" CLJPropsComponent "fulcro_client_localized-dom-spec_CLJPropsComponent__a x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and cljs props with class and ID:" CLJPropsWithIDComponent "fulcro_client_localized-dom-spec_CLJPropsWithIDComponent__a x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and js props with class and ID:" JSPropsWithIDComponent "fulcro_client_localized-dom-spec_JSPropsWithIDComponent__a x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and cljs props with symbolic class and ID:" SymbolicClassPropComponent "fulcro_client_localized-dom-spec_SymbolicClassPropComponent__a x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and cljs binding for props" SymbolicClassPropsComponent "fulcro_client_localized-dom-spec_SymbolicClassPropsComponent__a x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and js binding for props" SymbolicClassJSPropsComponent "fulcro_client_localized-dom-spec_SymbolicClassJSPropsComponent__a x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw and a nil binding for props" SymbolicClassNilPropsComponent "fulcro_client_localized-dom-spec_SymbolicClassNilPropsComponent__a")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed a style kw with global marker:" ExtendedCSSComponent "fulcro_client_localized-dom-spec_ExtendedCSSComponent__a b x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed js props with class and ID:" NoKWComponent "x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed cljs props with class and ID:" NoKWCLJComponent "x")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed props with css/classes:" DynamicClassesComponent "fulcro_client_localized-dom-spec_DynamicClassesComponent__a b")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed props with symbolic css/classes:" DynamicSymClassesComponent "fulcro_client_localized-dom-spec_DynamicSymClassesComponent__a b")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed symbolic props that have css/classes:" DynamicSymPropsComponent "fulcro_client_localized-dom-spec_DynamicSymPropsComponent__a b")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed symbolic props that have css/classes:" DynamicSymPropsWithNilEntryComponent "b ")
-  (com.fulcrologic.fulcro-css.localized-dom-spec/check-kw-processing "It is passed symbolic props with css/classes and kw:" DynamicSymPropsWithKWComponent "fulcro_client_localized-dom-spec_DynamicSymPropsWithKWComponent__z x fulcro_client_localized-dom-spec_DynamicSymPropsWithKWComponent__a b"))
+  (check-kw-processing "It is passed a style kw and no props:" NoPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_NoPropsComponent__a")
+  (check-kw-processing "It is passed a style kw and nil props:" NilPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_NilPropsComponent__a")
+  (check-kw-processing "It is passed a style kw and empty cljs props:" EmptyPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_EmptyPropsComponent__a")
+  (check-kw-processing "It is passed a style kw and empty js props:" EmptyJSPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_EmptyJSPropsComponent__a")
+  (check-kw-processing "It is passed a style kw and cljs props with class:" CLJPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_CLJPropsComponent__a x")
+  (check-kw-processing "It is passed a style kw and cljs props with class and ID:" CLJPropsWithIDComponent "com_fulcrologic_fulcro-css_localized-dom-spec_CLJPropsWithIDComponent__a x")
+  (check-kw-processing "It is passed a style kw and js props with class and ID:" JSPropsWithIDComponent "com_fulcrologic_fulcro-css_localized-dom-spec_JSPropsWithIDComponent__a x")
+  (check-kw-processing "It is passed a style kw and cljs props with symbolic class and ID:" SymbolicClassPropComponent "com_fulcrologic_fulcro-css_localized-dom-spec_SymbolicClassPropComponent__a x")
+  (check-kw-processing "It is passed a style kw and cljs binding for props" SymbolicClassPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_SymbolicClassPropsComponent__a x")
+  (check-kw-processing "It is passed a style kw and js binding for props" SymbolicClassJSPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_SymbolicClassJSPropsComponent__a x")
+  (check-kw-processing "It is passed a style kw and a nil binding for props" SymbolicClassNilPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_SymbolicClassNilPropsComponent__a")
+  (check-kw-processing "It is passed a style kw with global marker:" ExtendedCSSComponent "com_fulcrologic_fulcro-css_localized-dom-spec_ExtendedCSSComponent__a b x")
+  (check-kw-processing "It is passed js props with class and ID:" NoKWComponent "x")
+  (check-kw-processing "It is passed cljs props with class and ID:" NoKWCLJComponent "x")
+  (check-kw-processing "It is passed props with css/classes:" DynamicClassesComponent "com_fulcrologic_fulcro-css_localized-dom-spec_DynamicClassesComponent__a b")
+  (check-kw-processing "It is passed props with symbolic css/classes:" DynamicSymClassesComponent "com_fulcrologic_fulcro-css_localized-dom-spec_DynamicSymClassesComponent__a b")
+  (check-kw-processing "It is passed symbolic props that have css/classes:" DynamicSymPropsComponent "com_fulcrologic_fulcro-css_localized-dom-spec_DynamicSymPropsComponent__a b")
+  (check-kw-processing "It is passed symbolic props that have css/classes:" DynamicSymPropsWithNilEntryComponent "b ")
+  (check-kw-processing "It is passed symbolic props with css/classes and kw:" DynamicSymPropsWithKWComponent "com_fulcrologic_fulcro-css_localized-dom-spec_DynamicSymPropsWithKWComponent__z x com_fulcrologic_fulcro-css_localized-dom-spec_DynamicSymPropsWithKWComponent__a b"))

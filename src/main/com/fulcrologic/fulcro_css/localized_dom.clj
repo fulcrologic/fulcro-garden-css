@@ -1,8 +1,7 @@
 (ns com.fulcrologic.fulcro-css.localized-dom
   (:refer-clojure :exclude [map meta time use set symbol filter])
   (:require
-    
-    [fulcro.util :as util]
+    [com.fulcrologic.fulcro.algorithms.misc :as util]
     [com.fulcrologic.fulcro.dom :as adom]
     com.fulcrologic.fulcro.dom-common
     com.fulcrologic.fulcro-css.localized-dom-common)

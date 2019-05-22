@@ -1,4 +1,5 @@
 {:deps   {:aliases [:test :provided]}
+ :jvm-opts ["-Xmx4G"]
  :nrepl  {:port 9000}
  :builds {
 
