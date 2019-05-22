@@ -1,0 +1,18 @@
+{:deps   {:aliases [:test :provided]}
+ :nrepl  {:port 9000}
+ :builds {
+
+          :test     {:target           :browser-test
+                     :test-dir         "resources/public/js/test"
+                     :ns-regexp        "-spec$"
+                     :compiler-options {:static-fns false}
+                     :devtools         {:http-port          8080
+                                        :http-resource-root "public"
+                                        :http-root          "resources/public/js/test"}}
+
+          :ci-tests {:target           :karma
+                     :js-options       {:js-provider :shadow}
+                     :compiler-options {:static-fns false}  ; required for mocking to work
+                     :output-to        "target/ci.js"
+                     :ns-regexp        "-spec$"}}}
+

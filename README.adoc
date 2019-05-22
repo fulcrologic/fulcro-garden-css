@@ -1,0 +1,22 @@
+:source-highlighter: coderay
+:source-language: clojure
+:toc:
+:toc-placement: preamble
+:sectlinks:
+:sectanchors:
+:sectnums:
+
+This library adds co-located CSS support to Fulcro 3 components.  Fulcro 2.x and earlier have this 
+integrated by default, but 3+ enables this to be a pure library concern, which allows more room for
+others to provide alternate approaches to solving the problem.
+
+== Usage
+
+YOU MUST install the following middleware in your Fulcro 3 app for this library to work:
+
+
+```
+TODO
+```
+
+(from there, see Developer's guide...other than the require namespaces it will work the same)
