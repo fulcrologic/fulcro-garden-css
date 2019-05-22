@@ -9,7 +9,7 @@
             [garden.selectors :as gs]))
 
 (def cssify "Replaces slashes and dots with underscore." ci/cssify)
-(def fq-component comp/registry-key)
+(def fq-component ci/fqname)
 (def local-class "Generates a string name of a localized CSS class. This function combines the fully-qualified name of the given class
      with the (optional) specified name."
   ci/local-class)

@@ -62,7 +62,7 @@
       "Can find in breadth-first order"
       (injection/find-css-nodes {:component NestedRootWithCSS :order :breadth-first}) => [NestedRootWithCSS A B]
       "Includes items from css-include"
-      (injection/find-css-nodes {:component JoinAndInclude}) => [D C A JoinAndInclude])))
+      (injection/find-css-nodes {:component JoinAndInclude}) => [D C A])))
 
 (specification "Computing CSS"
   (behavior "When auto-include? is false"

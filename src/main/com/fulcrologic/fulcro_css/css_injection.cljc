@@ -12,6 +12,7 @@
 (defn error [& msg]
   #?(:cljs (apply js/console.log msg)
      :clj  (.println System/err (apply str msg))))
+
 (defn component-css-includes-with-depth [component breadth depth]
   (let [includes (css/get-includes component)]
     (-> (into []
@@ -30,13 +31,11 @@
         breadth       (atom 0)
         traverse      (fn traverse* [{:keys [children component]} depth]
                         (into
-                          (if (and component (css/CSS? component))
-                            (into
-                              [{::depth     depth
-                                ::breadth   (swap! breadth inc)
-                                ::component component}]
-                              (component-css-includes-with-depth component @breadth depth))
-                            [])
+                          (cond-> []
+                            (and component (css/CSS? component)) (conj {::depth     depth
+                                                                        ::breadth   (swap! breadth inc)
+                                                                        ::component component})
+                            component (into (component-css-includes-with-depth component @breadth depth)))
                           (mapcat #(traverse* % (inc depth)) (seq children))))
         nodes         (traverse ast 0)
         ordered-nodes (if (= order :breadth-first)

@@ -30,7 +30,7 @@
 (defsc SymbolicClassNilPropsComponent [this props] (let [props nil] (ldom/div :.a#y props "Hello")))
 
 (comment
-  (js/console.log (comp/registry-key NoKWComponent))
+  (comp/registry-key NoKWComponent)
   (adom/render-to-str (binding [comp/*app* (app/fulcro-app)] ((comp/factory NoPropsComponent) {})))
   (adom/render-to-str ((comp/factory NoPropsComponment) {}))
   )

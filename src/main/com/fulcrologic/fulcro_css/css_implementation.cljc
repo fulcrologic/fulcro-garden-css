@@ -14,15 +14,15 @@
   "Replaces slashes and dots with underscore."
   [str] (when str (str/replace str #"[./]" "_")))
 
-(defn fq-component [comp-class] (comp/registry-key comp-class))
+(defn fqname [comp-class] (-> comp-class comp/registry-key str (str/replace #"^:" "")))
 
 (defn local-class
   "Generates a string name of a localized CSS class. This function combines the fully-qualified name of the given class
      with the (optional) specified name."
   ([comp-class]
-   (str (cssify (comp/registry-key comp-class))))
+   (str (cssify (fqname comp-class))))
   ([comp-class nm]
-   (str (cssify (comp/registry-key comp-class)) "__" (name nm))))
+   (str (cssify (fqname comp-class)) "__" (name nm))))
 
 (defn set-classname
   [m subclasses]
