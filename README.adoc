@@ -7,16 +7,100 @@
 :sectnums:
 
 This library adds co-located CSS support to Fulcro 3 components.  Fulcro 2.x and earlier have this 
-integrated by default, but 3+ enables this to be a pure library concern, which allows more room for
-others to provide alternate approaches to solving the problem.
+integrated by default, but 3+ enables this to be a pure library concern which allows more room for
+others to provide alternate approaches to solving the same problem.
 
 == Usage
 
-YOU MUST install the following middleware in your Fulcro 3 app for this library to work:
+1. Add this library to your project.
+2. Add Garden CSS to your components
+3. Use `localized-dom`, 4th arg destructuring, or direct `css/get-classnames` to access/use the generated
+ CSS class names.
+
+```
+(ns some-app
+  (:require
+    [com.fulcrologic.fulcro-css.localized-dom :as dom]
+    [com.fulcrologic.fulcro-css.css-injection :as inj]
+    [com.fulcrologic.fulcro-css.css :as css]))
+
+...
+
+;; OPTION 1: 4th arg destructing (requires adding props middleware)
+(defsc UIElement [this props computed {:keys [red]}]
+  {:query ...
+   :css   [[:.red {:color "red"}]]}
+
+  ;; OPTION 2: Destructure them explicitly
+  (let [{:keys [red]} (css/get-classnames UIElement)]
+    ;; OPTION 3: Use `localized-dom` keyword classes instead of `dom` for elements
+    (dom/div :.red
+      (dom/li {:classes [red]})))
+  ...)
+
+(defsc Root [this props]
+  {...normal options ...}
+  (dom/div {}
+    ;; Auto-scan the query to find components with CSS and inject it
+    (inj/style-element {:component Root})
+    ...))
+```
+
+== Extra Props
+
+Fulcro 3 gives support for library to add things to the `extra-props` (4th) argument to components.  This can
+be syntactically convenient, but beware that it adds a slight bit of overhead to every component in your system.
+
+This library does not require you to add the middleware unless you want the 4th argument to contain your
+munged CSS classnames as simple names. To add it use Fulcro's `wrap-update-extra-props` middleware utility:
 
 
 ```
-TODO
+(ns fulcro-todomvc.main
+  (:require
+    [com.fulcrologic.fulcro.components :as comp]
+    [com.fulcrologic.fulcro-css.css :as css]))
+
+(def app (app/fulcro-app {:props-middleware (comp/wrap-update-extra-props
+                                               (fn [cls extra-props]
+                                                 (merge extra-props (log/spy :info (css/get-classnames cls)))))
+                          ...}))
 ```
 
-(from there, see Developer's guide...other than the require namespaces it will work the same)
+== Localized DOM
+
+The localized DOM API allows you to use the keyword shortcut support to specify the localized classnames:
+
+```
+(ldom/div :.red ...)
+```
+
+If you need to access global classnames without munging, use a `$` as a prefix instead of `.`:
+
+```
+(ldom/div :.red$big ...)
+```
+
+The localized DOM can be mixed with non-localized by requiring them under different namespaces.
+
+```
+;; Use Fulcro's normal dom to get <div class="big">
+(dom/div :.big ...)
+
+;; Use this library's dom to get <div class="some_namespace_Component__red">
+(ldom/div :.red ...)
+```
+
+== Performance
+
+The overhead of most of these features should be unnoticeable in most applications.  In case you find a situation
+where you need more performance it can be gained by:
+
+1. Do not install the extra props middleware
+2. Use manual destructuring once per class in a `let`.
+3. Use the `:classes` argument in the normal Fulcro DOM.
+
+```
+(let [{:keys [red]} (css/get-classnames UIElement)]
+  (dom/div {:classes [red] ...))
+```
