@@ -41,7 +41,14 @@
 (defn get-local-rules
   "Get the *raw* value from the local-rules of a component."
   [component]
-  (or (some-> component comp/component-options :css) []))
+  (if-let [entry (some-> component comp/component-options :css)]
+    (cond
+      (fn? entry) (entry)
+      (vector? entry) entry
+      :otherwise (do
+                   (println "Invalid :css on " (comp/component-name component))
+                   entry))
+    []))
 
 (defn prefixed-name?
   "Returns true if the given string starts with one of [. $ &$ &.]"

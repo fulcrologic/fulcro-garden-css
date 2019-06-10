@@ -1,4 +1,4 @@
-(defproject com.fulcrologic/fulcro-garden-css "3.0.0"
+(defproject com.fulcrologic/fulcro-garden-css "3.0.1"
   :description "Add co-located CSS to Fulcro components"
   :url "https://github.com/fulcrologic/fulcro-garden-css"
   :lein-min-version "2.8.1"
