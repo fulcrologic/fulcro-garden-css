@@ -109,8 +109,9 @@
 (defn selector?
   [x]
   (try
-    (satisfies? gs/ICSSSelector x)
-    (catch #?(:cljs :default :clj Throwable) _
+    #?(:clj  (= garden.selectors.CSSSelector (type x))
+       :cljs (= js/garden.selectors.CSSSelector (type x)))
+    (catch #?(:cljs :default :clj Throwable) e
       false)))
 
 (defn get-selector-keywords

@@ -59,6 +59,7 @@
     Props are as described in `style-element`.
     "
     [props]
+    (assert (and (map? props) (contains? props :component)) "Argument must be a map that contains the key :component")
     (let [{:keys [component auto-include? garden-flags] :or {garden-flags {}}} props
           rules (if (false? auto-include?)
                   (some-> component (css/get-css))
@@ -118,10 +119,19 @@
      "(Re)place the STYLE element with the provided ID on the document's low-level DOM with the co-located CSS of
      the specified component.
 
-     The `options` is the same as passed to `style-element`.
+     The `options` is the same as passed to `style-element`:
+
+     - `:component`: (REQUIRED) The UI component to pull CSS from. Class or instance allowed.
+     - `:order`: (optional)  `:depth-first` (default) or `:breadth-first` (legacy order)
+     - `:react-key` : (optional) A React key. Changing the key will force it to update the CSS (which is otherwise caches for performance)
+     - `:auto-include?`: (optional) When set to true (default) it will use the component query to recursively scan for
+       CSS instead of explicit includes. When set to (exactly) `false` then it ONLY uses the user-declared inclusions on
+       the component.
+     - `:garden-flags`: (optional) A map with [garden compiler flags](https://github.com/noprompt/garden/wiki/Compiler#flags)
 
      ONLY WORKS FOR CLJS, since otherwise there is no DOM to change."
      [id options]
+     (assert (and (map? options) (contains? options :component)) "Argument must be a map that contains the key :component")
      (remove-from-dom id)
      (let [style-ele (.createElement js/document "style")
            css       (compute-css options)]
