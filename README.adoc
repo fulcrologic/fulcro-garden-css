@@ -63,7 +63,7 @@ munged CSS classnames as simple names. To add it use Fulcro's `wrap-update-extra
 
 (def app (app/fulcro-app {:props-middleware (comp/wrap-update-extra-props
                                                (fn [cls extra-props]
-                                                 (merge extra-props (log/spy :info (css/get-classnames cls)))))
+                                                 (merge extra-props (css/get-classnames cls))))
                           ...}))
 ```
 
