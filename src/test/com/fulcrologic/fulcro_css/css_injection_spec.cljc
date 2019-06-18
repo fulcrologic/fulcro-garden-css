@@ -120,13 +120,13 @@
                                 :garden-flags  {:pretty-print? false}
                                 :auto-include? false}))))
 
-#?(:clj
-   (specification "Style element CSS render"
-     (assertions
-       "Renders via render-to-str for the server"
-       (str/includes? (dom/render-to-str (injection/style-element {:component A})) "<style") => true
-       (str/includes? (dom/render-to-str (injection/style-element {:component A})) "color: red") => true
-       (str/includes? (dom/render-to-str (injection/style-element {:component    A
-                                                                   :garden-flags {:vendors     ["webkit"]
-                                                                                  :auto-prefix #{:border-radius}}}))
-         "-webkit-border-radius: 2px;") => true)))
+;#?(:clj
+;   (specification "Style element CSS render"
+;     (assertions
+;       "Renders via render-to-str for the server"
+;       (str/includes? (dom/render-to-str (injection/style-element {:component A})) "<style") => true
+;       (str/includes? (dom/render-to-str (injection/style-element {:component A})) "color: red") => true
+;       (str/includes? (dom/render-to-str (injection/style-element {:component    A
+;                                                                   :garden-flags {:vendors     ["webkit"]
+;                                                                                  :auto-prefix #{:border-radius}}}))
+;         "-webkit-border-radius: 2px;") => true)))
