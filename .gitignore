@@ -16,7 +16,7 @@ compiled
 figwheel_server.log
 node_modules
 out
-pom.xml*
+pom.xml.asc
 resources/private/js
 resources/public/js
 target
