@@ -4,161 +4,109 @@
     [com.fulcrologic.fulcro-css.css :as css]
     [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
     #?(:cljs [com.fulcrologic.fulcro.dom :as dom]
-       :clj [com.fulcrologic.fulcro.dom-server :as dom])
+       :clj  [com.fulcrologic.fulcro.dom-server :as dom])
     [garden.selectors :as sel]))
 
-(comment
-(defui ListItem
-  static cssp/CSS
-  (local-rules [this] [[:.item {:font-weight "bold"}]])
-  (include-children [this] [])
-  Object
-  (render [this]
-    (let [{:keys [item]} (css/get-classnames ListItem)]
-      (dom/li #js {:className item} "listitem"))))
+(defsc ListItem [this _]
+  {:css [[:.item {:font-weight "bold"}]]}
+  (let [{:keys [item]} (css/get-classnames ListItem)]
+    (dom/li #js {:className item} "listitem")))
 
-(defui ListComponent
-  static cssp/CSS
-  (local-rules [this] [[:.items-wrapper {:background-color "blue"}]])
-  (include-children [this] [ListItem])
-  Object
-  (render [this]
-    (let [{:keys [items-wrapper]} (css/get-classnames ListComponent)]
-      (dom/ul #js {:className items-wrapper} "list"))))
+(defsc ListComponent [this _]
+  {:css         [[:.items-wrapper {:background-color "blue"}]]
+   :css-include [ListItem]}
+  (let [{:keys [items-wrapper]} (css/get-classnames ListComponent)]
+    (dom/ul #js {:className items-wrapper} "list")))
 
-(defui Root
-  static cssp/CSS
-  (local-rules [this] [[:.container {:background-color "red"}]])
-  (include-children [this] [ListComponent])
-  static cssp/Global
-  (global-rules [this] [[:.text {:color "green"}]])
-  Object
-  (render [this]
-    (dom/div nil "root")))
+(defsc Root [this _]
+  {:css         [[:.container {:background-color "red"}]]
+   :css-include [ListComponent]
+   :css-global  [[:.text {:color "green"}]]}
+  (dom/div nil "root"))
 
-(defui Child1
-  static cssp/CSS
-  (local-rules [this] [[:.child1class {:color "red"}]])
-  (include-children [this] [])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc Child1 [_ _]
+  {:css [[:.child1class {:color "red"}]]}
+  (dom/div nil "test"))
 
-(defui Child2
-  static cssp/CSS
-  (local-rules [this] [[:.child2class {:color "blue"}]])
-  (include-children [this] [])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc Child2 [this _]
+  {:css [[:.child2class {:color "blue"}]]}
+  (dom/div nil "test"))
 
-(defui Parent
-  static cssp/CSS
-  (local-rules [this] [])
-  (include-children [this] [Child1 Child2])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc Parent [this _]
+  {:css-include [Child1 Child2]}
+  (dom/div nil "test"))
 
-(defui MyLabel
-  static cssp/CSS
-  (local-rules [this] [[:.my-label {:color "green"}]])
-  (include-children [this] []))
+(defsc MyLabel [this _]
+  {:css [[:.my-label {:color "green"}]]})
 
-(defui MyButton
-  static cssp/CSS
-  (local-rules [this] [[:.my-button {:color "black"}]])
-  (include-children [this] [MyLabel])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc MyButton [this _]
+  {:css         [[:.my-button {:color "black"}]]
+   :css-include [MyLabel]}
+  (dom/div nil "test"))
 
-(defui MyForm
-  static cssp/CSS
-  (local-rules [this] [[:.form {:background-color "white"}]])
-  (include-children [this] [MyButton])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc MyForm [this _]
+  {:css         [[:.form {:background-color "white"}]]
+   :css-include [MyButton]}
+  (dom/div nil "test"))
 
-(defui MyNavigation
-  static cssp/CSS
-  (local-rules [this] [[:.nav {:width "100px"}]])
-  (include-children [this] [MyButton])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc MyNavigation [this _]
+  {:css         [[:.nav {:width "100px"}]]
+   :css-include [MyButton]}
+  (dom/div nil "test"))
 
-(defui MyRoot
-  static cssp/CSS
-  (local-rules [this] [])
-  (include-children [this] [MyForm MyNavigation])
-  Object
-  (render [this]
-    (dom/div nil "test")))
+(defsc MyRoot [this _]
+  {:css-include [MyForm MyNavigation]}
+  (dom/div nil "test"))
 
 (specification "Obtain CSS from classes"
   (behavior "can be obtained from"
     (assertions
       "a single component"
-      (css/get-css ListItem) => '([:.fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
+      (css/get-css ListItem) => '([:.com_fulcrologic_fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
       "a component with a child"
-      (css/get-css ListComponent) => '([:.fulcro-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
-                                        [:.fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
+      (css/get-css ListComponent) => '([:.com_fulcrologic_fulcro-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
+                                       [:.com_fulcrologic_fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
       "a component with nested children"
-      (css/get-css Root) => '([:.fulcro-css_css-spec_Root__container {:background-color "red"}]
-                               [:.text {:color "green"}]
-                               [:.fulcro-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
-                               [:.fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
+      (css/get-css Root) => '([:.com_fulcrologic_fulcro-css_css-spec_Root__container {:background-color "red"}]
+                              [:.text {:color "green"}]
+                              [:.com_fulcrologic_fulcro-css_css-spec_ListComponent__items-wrapper {:background-color "blue"}]
+                              [:.com_fulcrologic_fulcro-css_css-spec_ListItem__item {:font-weight "bold"}])
       "a component with multiple direct children"
-      (css/get-css Parent) => '([:.fulcro-css_css-spec_Child1__child1class {:color "red"}]
-                                 [:.fulcro-css_css-spec_Child2__child2class {:color "blue"}])
+      (css/get-css Parent) => '([:.com_fulcrologic_fulcro-css_css-spec_Child1__child1class {:color "red"}]
+                                [:.com_fulcrologic_fulcro-css_css-spec_Child2__child2class {:color "blue"}])
       "a component with multiple direct children without duplicating rules"
-      (css/get-css MyRoot) => '([:.fulcro-css_css-spec_MyForm__form {:background-color "white"}]
-                                 [:.fulcro-css_css-spec_MyNavigation__nav {:width "100px"}]
-                                 [:.fulcro-css_css-spec_MyButton__my-button {:color "black"}]
-                                 [:.fulcro-css_css-spec_MyLabel__my-label {:color "green"}]))))
+      (css/get-css MyRoot) => '([:.com_fulcrologic_fulcro-css_css-spec_MyForm__form {:background-color "white"}]
+                                [:.com_fulcrologic_fulcro-css_css-spec_MyNavigation__nav {:width "100px"}]
+                                [:.com_fulcrologic_fulcro-css_css-spec_MyButton__my-button {:color "black"}]
+                                [:.com_fulcrologic_fulcro-css_css-spec_MyLabel__my-label {:color "green"}]))))
 
 (specification "Generate classnames from CSS"
   (assertions
     "global classnames are untouched"
     (:text (css/get-classnames Root)) => "text"
     "local classnames are transformed"
-    (:container (css/get-classnames Root)) => "fulcro-css_css-spec_Root__container"
+    (:container (css/get-classnames Root)) => "com_fulcrologic_fulcro-css_css-spec_Root__container"
     "does not generate children-classnames"
     (:items-wrapper (css/get-classnames Root)) => nil))
 
-(defui A
-  static cssp/CSS
-  (local-rules [this] [[(sel/> :.a :.b :.c) {:color "blue"}]])
-  (include-children [this] []))
+(defsc A [this _]
+  {:css [[(sel/> :.a :.b :.c) {:color "blue"}]]})
 
-(defui B
-  static cssp/CSS
-  (local-rules [this] [[(sel/> :$a :.b :span :$c) {:color "red"}]])
-  (include-children [this] []))
+(defsc B [_ _]
+  {:css [[(sel/> :$a :.b :span :$c) {:color "red"}]]})
 
-(defui C
-  static cssp/CSS
-  (local-rules [this] [[(sel/+ :.a :$b) {:color "green"}]])
-  (include-children [this] []))
+(defsc C [_ _]
+  {:css [[(sel/+ :.a :$b) {:color "green"}]]})
 
-(defui D
-  static cssp/CSS
-  (local-rules [this] [[(sel/- :.a :.b) {:color "yellow"}]])
-  (include-children [this] []))
+(defsc D [_ _]
+  {:css [[(sel/- :.a :.b) {:color "yellow"}]]})
 
-(defui E
-  static cssp/CSS
-  (local-rules [this] [[(sel/+ :.a (sel/> :$b :span)) {:color "brown"}]])
-  (include-children [this] []))
+(defsc E [_ _]
+  {:css [[(sel/+ :.a (sel/> :$b :span)) {:color "brown"}]]})
 
-(defui F
-  static cssp/CSS
-  (local-rules [this] [[(sel/+ :.a (sel/> :$b :span)) {:color "brown"}]])
-  (include-children [this] [])
-  static cssp/Global
-  (global-rules [this] [[(sel/> :.c :.d) {:color "blue"}]]))
+(defsc F [_ _]
+  {:css        [[(sel/+ :.a (sel/> :$b :span)) {:color "brown"}]]
+   :css-global [[(sel/> :.c :.d) {:color "blue"}]]})
 
 (defn- first-css-selector [css-rules]
   (garden.selectors/css-selector (ffirst css-rules)))
@@ -166,43 +114,40 @@
 (specification "CSS Combinators"
   (assertions
     "Child selector"
-    (first-css-selector (css/get-css A)) => ".fulcro-css_css-spec_A__a > .fulcro-css_css-spec_A__b > .fulcro-css_css-spec_A__c"
+    (first-css-selector (css/get-css A)) => ".com_fulcrologic_fulcro-css_css-spec_A__a > .com_fulcrologic_fulcro-css_css-spec_A__b > .com_fulcrologic_fulcro-css_css-spec_A__c"
     "Child selector with localization prevention"
-    (first-css-selector (css/get-css B)) => ".a > .fulcro-css_css-spec_B__b > span > .c"
+    (first-css-selector (css/get-css B)) => ".a > .com_fulcrologic_fulcro-css_css-spec_B__b > span > .c"
     "Adjacent sibling selector"
-    (first-css-selector (css/get-css C)) => ".fulcro-css_css-spec_C__a + .b"
+    (first-css-selector (css/get-css C)) => ".com_fulcrologic_fulcro-css_css-spec_C__a + .b"
     "General sibling selector"
-    (first-css-selector (css/get-css D)) => ".fulcro-css_css-spec_D__a ~ .fulcro-css_css-spec_D__b"
+    (first-css-selector (css/get-css D)) => ".com_fulcrologic_fulcro-css_css-spec_D__a ~ .com_fulcrologic_fulcro-css_css-spec_D__b"
     "Multiple different selectors"
-    (first-css-selector (css/get-css E)) => ".fulcro-css_css-spec_E__a + .b > span"
+    (first-css-selector (css/get-css E)) => ".com_fulcrologic_fulcro-css_css-spec_E__a + .b > span"
     "Get classnames"
-    (css/get-classnames F) => {:a "fulcro-css_css-spec_F__a"
+    (css/get-classnames F) => {:a "com_fulcrologic_fulcro-css_css-spec_F__a"
                                :b "b"
                                :c "c"
                                :d "d"}))
 
-(defui G
-  static cssp/CSS
-  (local-rules [this] [[:.a {:color "orange"}
-                        [:&.b {:font-weight "bold"}]
-                        [:&$c {:background-color "black"}]]])
-  (include-children [this] [])
-  static cssp/Global
-  (global-rules [this] [[:.d {:color "green"}
-                         [:&.e {:color "gray"}]]]))
+(defsc G [_ _]
+  {:css        [[:.a {:color "orange"}
+                 [:&.b {:font-weight "bold"}]
+                 [:&$c {:background-color "black"}]]]
+   :css-global [[:.d {:color "green"}
+                 [:&.e {:color "gray"}]]]})
 
 (specification "Special &-selector"
   (assertions
     "Get CSS rules"
-    (css/get-css G) => '([:.fulcro-css_css-spec_G__a {:color "orange"}
-                          [:&.fulcro-css_css-spec_G__b {:font-weight "bold"}]
+    (css/get-css G) => '([:.com_fulcrologic_fulcro-css_css-spec_G__a {:color "orange"}
+                          [:&.com_fulcrologic_fulcro-css_css-spec_G__b {:font-weight "bold"}]
                           [:&.c {:background-color "black"}]]
-                          [:.d {:color "green"}
-                           [:&.e {:color "gray"}]])
+                         [:.d {:color "green"}
+                          [:&.e {:color "gray"}]])
     "Get classnames"
-    (css/get-classnames G) => {:a "fulcro-css_css-spec_G__a"
-                               :b "fulcro-css_css-spec_G__b"
+    (css/get-classnames G) => {:a "com_fulcrologic_fulcro-css_css-spec_G__a"
+                               :b "com_fulcrologic_fulcro-css_css-spec_G__b"
                                :c "c"
                                :d "d"
                                :e "e"}))
-  )
+
