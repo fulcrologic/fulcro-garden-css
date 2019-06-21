@@ -3,6 +3,7 @@
   ;; IMPORTANT: DO NOT INCLUDE GARDEN HERE!!!!
   (:require
     [cljs.tagged-literals]
+    [taoensso.timbre :as log]
     [garden.selectors :as gs]
     [com.fulcrologic.fulcro.components :as comp]
     [clojure.string :as str])
@@ -47,6 +48,18 @@
       (vector? entry) entry
       :otherwise (do
                    (println "Invalid :css on " (comp/component-name component))
+                   entry))
+    []))
+
+(defn get-global-rules
+  "Get the *raw* value from the global-rules of a component."
+  [component]
+  (if-let [entry (some-> component comp/component-options :css-global)]
+    (cond
+      (fn? entry) (entry)
+      (vector? entry) entry
+      :otherwise (do
+                   (println "Invalid :css-global on " (comp/component-name component))
                    entry))
     []))
 
@@ -139,6 +152,8 @@
 (defn get-classnames
   "Returns a map from user-given CSS rule names to localized names of the given component."
   [comp]
-  (let [local-class-keys (get-class-keys (get-local-rules comp))
-        local-classnames (zipmap (map remove-prefix-kw local-class-keys) (map #(kw->localized-classname comp %) local-class-keys))]
-    local-classnames))
+  (let [local-class-keys  (get-class-keys (get-local-rules comp))
+        global-class-keys (map remove-prefix-kw (get-class-keys (get-global-rules comp)))
+        local-classnames  (zipmap (map remove-prefix-kw local-class-keys) (map #(kw->localized-classname comp %) local-class-keys))
+        global-classnames (zipmap global-class-keys (map name global-class-keys))]
+    (merge local-classnames global-classnames)))

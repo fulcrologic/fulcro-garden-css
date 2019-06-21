@@ -4,12 +4,12 @@
 
  :aliases {:provided  {:extra-deps {org.clojure/clojure       {:mvn/version "1.10.0" :scope "provided"}
                                     org.clojure/clojurescript {:mvn/version "1.10.520" :scope "provided"}
-                                    com.fulcrologic/fulcro    {:mvn/version "3.0.0-alpha-9-SNAPSHOT" :scope "provided"}
+                                    com.fulcrologic/fulcro    {:mvn/version "3.0.0-alpha-11" :scope "provided"}
                                     edn-query-language/eql    {:mvn/version "0.0.4" :scope "provided"}}}
            :clj-tests {:extra-paths ["src/test"]
                        :main-opts   ["-m" "kaocha.runner"]
                        :extra-deps  {lambdaisland/kaocha {:mvn/version "0.0-418"}}}
 
            :test      {:extra-paths ["src/test"]
-                       :extra-deps  {org.clojure/tools.namespace {:mvn/version "0.3.0-alpha4"}
-                                     fulcrologic/fulcro-spec     {:mvn/version "3.0.1"}}}}}
+                       :extra-deps  {org.clojure/tools.namespace {:mvn/version "0.3.0"}
+                                     fulcrologic/fulcro-spec     {:mvn/version "3.1.1"}}}}}
