@@ -1,3 +1,7 @@
+3.0.4
+-----
+- Added back in fn support for :css-include
+
 3.0.3
 -----
 - Fixed global css support
