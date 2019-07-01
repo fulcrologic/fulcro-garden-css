@@ -93,7 +93,10 @@
 (defn get-includes
   "Returns the list of components from the include-children method of a component"
   [component]
-  (or (some-> component comp/component-options :css-include) []))
+  (let [includes (some-> component comp/component-options :css-include)]
+    (if (fn? includes)
+      (includes)
+      (or includes []))))
 
 (defn get-nested-includes
   "Recursively finds all includes starting at the given component."
