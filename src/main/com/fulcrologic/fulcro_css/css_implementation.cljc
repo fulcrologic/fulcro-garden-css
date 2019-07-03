@@ -3,7 +3,6 @@
   ;; IMPORTANT: DO NOT INCLUDE GARDEN HERE!!!!
   (:require
     [cljs.tagged-literals]
-    [taoensso.timbre :as log]
     [garden.selectors :as gs]
     [com.fulcrologic.fulcro.components :as comp]
     [clojure.string :as str])
