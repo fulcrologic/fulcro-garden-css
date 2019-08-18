@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [map meta time use set symbol filter])
   (:require
     com.fulcrologic.fulcro.dom
-    [com.fulcrologic.fulcro.algorithms.misc :as util]
+    [com.fulcrologic.fulcro.components :as comp]
     [com.fulcrologic.fulcro-css.localized-dom-common :as cdom]))
 
 (declare a abbr address altGlyph altGlyphDef altGlyphItem animate animateColor animateMotion animateTransform area
@@ -25,7 +25,7 @@
 (def create-element com.fulcrologic.fulcro.dom/create-element)
 
 (letfn [(arr-append* [arr x] (.push arr x) arr)
-        (arr-append [arr tail] (reduce arr-append* arr (util/force-children tail)))]
+        (arr-append [arr tail] (reduce arr-append* arr (comp/force-children tail)))]
   (defn macro-create-element
     ([type args] (macro-create-element type args nil))
     ([type args csskw]
