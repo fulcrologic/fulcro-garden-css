@@ -6,6 +6,8 @@
 :sectanchors:
 :sectnums:
 
+image:https://img.shields.io/clojars/v/com.fulcrologic/fulcro-garden-css.svg[link=https://clojars.org/com.fulcrologic/fulcro-garden-css]
+
 This library adds co-located CSS support to Fulcro 3 components.  Fulcro 2.x and earlier have this 
 integrated by default, but 3+ enables this to be a pure library concern which allows more room for
 others to provide alternate approaches to solving the same problem.
