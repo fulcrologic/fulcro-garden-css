@@ -1,3 +1,7 @@
+3.0.5/6
+-------
+- Fixed namespaces
+
 3.0.4
 -----
 - Added back in fn support for :css-include

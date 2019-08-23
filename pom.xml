@@ -4,7 +4,7 @@
 
   <groupId>com.fulcrologic</groupId>
   <artifactId>fulcro-garden-css</artifactId>
-  <version>3.0.4</version>
+  <version>3.0.6</version>
   <name>fulcro-garden-css</name>
 
   <distributionManagement>
