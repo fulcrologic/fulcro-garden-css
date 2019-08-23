@@ -3,8 +3,8 @@
   (:require
     [com.fulcrologic.fulcro.dom-server :refer [element element?]]
     [com.fulcrologic.fulcro.dom-common :as dc]
-    [com.fulcrologic.fulcro.algorithms.misc :as util]
-    [com.fulcrologic.fulcro-css.localized-dom-common :as ldc]))
+    [com.fulcrologic.fulcro-css.localized-dom-common :as ldc]
+    [com.fulcrologic.fulcro.algorithms.do-not-use :as util]))
 
 (declare a abbr address altGlyph altGlyphDef altGlyphItem animate animateColor animateMotion animateTransform area
   article aside audio b base bdi bdo big blockquote body br button canvas caption circle cite clipPath code

@@ -1,10 +1,11 @@
 (ns com.fulcrologic.fulcro-css.localized-dom
   (:refer-clojure :exclude [map meta time use set symbol filter])
   (:require
-    [com.fulcrologic.fulcro.algorithms.misc :as util]
     [com.fulcrologic.fulcro.dom :as adom]
     com.fulcrologic.fulcro.dom-common
-    com.fulcrologic.fulcro-css.localized-dom-common)
+    com.fulcrologic.fulcro-css.localized-dom-common
+    [com.fulcrologic.fulcro.algorithms.do-not-use :as util]
+    [com.fulcrologic.fulcro.components :as comp])
   (:import (cljs.tagged_literals JSValue)))
 
 (defn emit-tag [str-tag-name args]
@@ -16,7 +17,7 @@
         children       (mapv (fn [[_ c]]
                                (if (or (nil? c) (string? c))
                                  c
-                                 `(com.fulcrologic.fulcro.algorithms.misc/force-children ~c))) children)
+                                 `(comp/force-children ~c))) children)
         attrs-type     (or (first attrs) :nil)              ; attrs omitted == nil
         attrs-value    (or (second attrs) {})
         create-element (case str-tag-name
