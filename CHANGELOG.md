@@ -1,3 +1,7 @@
+3.0.7
+-----
+- Fixed macro inclusion oversight
+
 3.0.5/6
 -------
 - Fixed namespaces

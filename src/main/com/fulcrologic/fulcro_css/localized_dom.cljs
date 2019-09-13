@@ -1,5 +1,6 @@
 (ns com.fulcrologic.fulcro-css.localized-dom
   (:refer-clojure :exclude [map meta time use set symbol filter])
+  (:require-macros [com.fulcrologic.fulcro-css.localized-dom])
   (:require
     com.fulcrologic.fulcro.dom
     [com.fulcrologic.fulcro.components :as comp]
