@@ -15,7 +15,7 @@ others to provide alternate approaches to solving the same problem.
 == Usage
 
 1. Add this library to your project.
-2. Add Garden CSS to your components
+2. Add https://github.com/noprompt/garden[Garden CSS] to your components
 3. Use `localized-dom`, 4th arg destructuring, or direct `css/get-classnames` to access/use the generated
  CSS class names.
 
