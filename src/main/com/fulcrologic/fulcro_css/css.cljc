@@ -17,7 +17,7 @@
 (def CSS? "`(CSS? class)` : Returns true if the given component has css." ci/CSS?)
 (def get-local-rules "`(get-local-rules class)` : Get the *raw* value from the local-rules of a component." ci/get-local-rules)
 (def get-global-rules "`(get-global-rules class)` : Get the *raw* value from the global-rules of a component." ci/get-global-rules)
-(def get-includes "`(get-inculdes class)` :Returns the list of components from the include-children method of a component" ci/get-includes)
+(def get-includes "`(get-inculdes class)` :Returns the list of components from the css-include method of a component" ci/get-includes)
 (def get-nested-includes "`(get-nested-includes class)` : Recursively finds all includes starting at the given component." ci/get-nested-includes)
 (def get-classnames "`(get-classnames class)` : Returns a map from user-given CSS rule names to localized names of the given component." ci/get-classnames)
 

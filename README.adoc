@@ -8,7 +8,7 @@
 
 image:https://img.shields.io/clojars/v/com.fulcrologic/fulcro-garden-css.svg[link=https://clojars.org/com.fulcrologic/fulcro-garden-css]
 
-This library adds co-located CSS support to Fulcro 3 components.  Fulcro 2.x and earlier have this 
+This library adds co-located CSS support to Fulcro 3 components.  Fulcro 2.x and earlier have this
 integrated by default, but 3+ enables this to be a pure library concern which allows more room for
 others to provide alternate approaches to solving the same problem.
 
@@ -44,6 +44,26 @@ others to provide alternate approaches to solving the same problem.
   {...normal options ...}
   (dom/div {}
     ;; Auto-scan the query to find components with CSS and inject it
+    (inj/style-element {:component Root})
+    ...))
+```
+
+To include CSS from components not present in the parent's query, use `:css-include`:
+
+```
+(defsc UtilityComponent [this props comp-props]
+ {:css [[:.red {:color "red"}]]}
+ (dom/div :.red))
+
+(def ui-utility-component ...)
+
+
+(defsc Root [this props]
+  {...normal options ...
+   ;; Include untracked component
+   :css-include [UtilityComponent]}
+  (dom/div {}
+    (ui-utility-component ...)
     (inj/style-element {:component Root})
     ...))
 ```
