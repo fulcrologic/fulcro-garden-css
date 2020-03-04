@@ -90,7 +90,7 @@
   (keyword (remove-prefix (name kw))))
 
 (defn get-includes
-  "Returns the list of components from the include-children method of a component"
+  "Returns the list of components from the css-include method of a component"
   [component]
   (let [includes (some-> component comp/component-options :css-include)]
     (if (fn? includes)
