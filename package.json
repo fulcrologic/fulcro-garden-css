@@ -5,13 +5,13 @@
   "main": "index.js",
   "directories": {},
   "devDependencies": {
-    "karma": "3.1.4",
-    "karma-chrome-launcher": "2.2.0",
+    "karma": "5.1.1",
+    "karma-chrome-launcher": "3.1.0",
     "karma-cljs-test": "0.1.0",
-    "react": "16.8.6",
-    "react-dom": "16.8.6",
+    "react": "16.13.1",
+    "react-dom": "16.13.1",
     "react-dom-server": "0.0.5",
-    "shadow-cljs": "2.8.37"
+    "shadow-cljs": "2.10.21"
   },
   "repository": {
     "type": "git",

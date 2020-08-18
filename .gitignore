@@ -22,3 +22,4 @@ resources/public/js
 target
 .cpcache
 .shadow-cljs
+package-lock.json

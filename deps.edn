@@ -3,13 +3,14 @@
  :deps    {garden {:mvn/version "1.3.9"}}
 
  :aliases {:provided  {:extra-deps {org.clojure/clojure       {:mvn/version "1.10.0" :scope "provided"}
-                                    org.clojure/clojurescript {:mvn/version "1.10.520" :scope "provided"}
-                                    com.fulcrologic/fulcro    {:mvn/version "3.0.0-beta-3" :scope "provided"}
-                                    edn-query-language/eql    {:mvn/version "0.0.4" :scope "provided"}}}
+                                    org.clojure/clojurescript {:mvn/version "1.10.773" :scope "provided"}
+                                    com.fulcrologic/fulcro    {:mvn/version "3.2.12" :scope "provided"}
+                                    edn-query-language/eql    {:mvn/version "1.0.0" :scope "provided"}}}
            :clj-tests {:extra-paths ["src/test"]
                        :main-opts   ["-m" "kaocha.runner"]
-                       :extra-deps  {lambdaisland/kaocha {:mvn/version "0.0-521"}}}
+                       :extra-deps  {lambdaisland/kaocha {:mvn/version "1.0.632"}}}
 
            :test      {:extra-paths ["src/test"]
-                       :extra-deps  {org.clojure/tools.namespace {:mvn/version "0.3.0"}
-                                     fulcrologic/fulcro-spec     {:mvn/version "3.1.1"}}}}}
+                       :extra-deps  {org.clojure/tools.namespace {:mvn/version "1.0.0"}
+                                     thheller/shadow-cljs        {:mvn/version "2.10.21"}
+                                     fulcrologic/fulcro-spec     {:mvn/version "3.1.6"}}}}}
