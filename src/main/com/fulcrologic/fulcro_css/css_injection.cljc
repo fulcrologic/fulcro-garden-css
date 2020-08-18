@@ -13,14 +13,18 @@
   #?(:cljs (apply js/console.log msg)
      :clj  (.println System/err (apply str msg))))
 
-(defn component-css-includes-with-depth [component breadth depth]
-  (let [includes (css/get-includes component)]
+(defn component-css-includes-with-depth [component cache breadth depth]
+  (let [includes-cache @cache
+        includes (remove (fn [component]
+                           (contains? includes-cache (comp/component-name component)))
+                         (css/get-includes component))]
+    (swap! cache into (keep comp/component-name includes))
     (-> (into []
           (map #(hash-map ::depth (inc depth)
                   ::breadth breadth
                   ::component %))
           includes)
-      (into (mapcat #(component-css-includes-with-depth % breadth (inc depth)) includes)))))
+      (into (mapcat #(component-css-includes-with-depth % cache breadth (inc depth)) includes)))))
 
 (defn find-css-nodes
   "Scan the given component and return an ordered vector of the css rules in depth-first order.
@@ -29,19 +33,26 @@
   (let [query         (if (map? state-map) (comp/get-query component state-map) (comp/get-query component))
         ast           (eql/query->ast query)
         breadth       (atom 0)
+        query-cache   (atom #{})
+        incl-cache    (atom #{})
         traverse      (fn traverse* [{:keys [children component]} depth]
-                        (into
-                          (cond-> []
-                            (and component (css/CSS? component)) (conj {::depth     depth
-                                                                        ::breadth   (swap! breadth inc)
-                                                                        ::component component})
-                            component (into (component-css-includes-with-depth component @breadth depth)))
-                          (mapcat #(traverse* % (inc depth)) (seq children))))
-        nodes         (traverse ast 0)
-        ordered-nodes (if (= order :breadth-first)
-                        (sort-by ::breadth nodes)
-                        (sort-by #(- (::depth %)) nodes))
-        unique-nodes  (distinct (map ::component ordered-nodes))]
+                        (if (contains? @query-cache (comp/component-name component))
+                          []
+                          (let [includes (into
+                                          (cond-> []
+                                                  (and component (css/CSS? component)) (conj {::depth depth
+                                                                                              ::breadth (swap! breadth inc)
+                                                                                              ::component component})
+                                                  component (into (component-css-includes-with-depth component incl-cache @breadth depth)))
+                                          (mapcat (fn [child]
+                                                    (traverse* child (inc depth))) (seq children)))]
+                            (when (comp/component-name component) (swap! query-cache conj (comp/component-name component)))
+                            includes)))
+        nodes          (traverse ast 0)
+        ordered-nodes  (if (= order :breadth-first)
+                          (sort-by ::breadth nodes)
+                          (sort-by #(- (::depth %)) nodes))
+        unique-nodes   (distinct (map ::component ordered-nodes))]
     (when-not query
       (error "Auto-include was used for CSS, but the component had no query! No CSS Found."))
     unique-nodes))
