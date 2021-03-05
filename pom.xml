@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.fulcrologic</groupId>
     <artifactId>fulcro-garden-css</artifactId>
-    <version>3.0.9</version>
+    <version>3.0.10-SNAPSHOT</version>
     <name>fulcro-garden-css</name>
     <distributionManagement>
         <repository>
@@ -45,7 +45,7 @@
         <url>https://github.com/fulcrologic/fulcro-garden-css</url>
         <connection>scm:git:git://github.com/fulcrologic/fulcro-garden-css.git</connection>
         <developerConnection>scm:git:ssh://git@github.com/fulcrologic/fulcro-garden-css.git</developerConnection>
-        <tag>fulcro-garden-css-3.0.9</tag>
+        <tag></tag>
     </scm>
     <repositories>
         <repository>
