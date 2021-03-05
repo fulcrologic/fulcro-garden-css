@@ -1,3 +1,7 @@
+3.0.9
+-----
+- Fixed compatibility with Fulcro 3.4.17+
+
 3.0.7
 -----
 - Fixed macro inclusion oversight

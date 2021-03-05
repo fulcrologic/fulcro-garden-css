@@ -8,7 +8,8 @@
     [com.fulcrologic.fulcro.components :as comp])
   (:import (cljs.tagged_literals JSValue)))
 
-(defn emit-tag [str-tag-name args]
+;; TODO: Could use env/form to annotate dom with source/line, as in DOM in Fulcro 3.4.17+
+(defn emit-tag [str-tag-name args & [env form]]
   (let [conformed-args (util/conform! ::adom/dom-macro-args args)
         {attrs    :attrs
          children :children
