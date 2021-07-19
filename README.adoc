@@ -70,7 +70,7 @@ To include CSS from components not present in the parent's query, use `:css-incl
 
 === Local vs. Global CSS
 
-The styles produced by `:css` will get a name unique to the component, which prevents conflicts with any other components declaring a style of the same name. You can also produce a global style (i.e. the name will be exactly as provided) by using the kye `:css-global`. Both can be used together.
+The styles produced by `:css` will get a name unique to the component, which prevents conflicts with any other components declaring a style of the same name. You can also produce a global style (i.e. the name will be exactly as provided) by using the key `:css-global`. Both can be used together.
 
 == Extra Props
 
