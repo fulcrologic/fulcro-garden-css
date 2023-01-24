@@ -3,7 +3,7 @@
             [com.fulcrologic.fulcro-css.css-implementation :as ci]
             [com.fulcrologic.fulcro.components :as comp]
             [clojure.string :as str]
-            #?(:cljs [cljsjs.react.dom])
+            #?(:cljs ["react-dom"])
             [clojure.walk :as walk]
             [garden.core :as g]
             [garden.selectors :as gs]))
