@@ -3,8 +3,8 @@
   (:require
     com.fulcrologic.fulcro-css.css
     #?(:clj [cljs.tagged-literals :refer [->JSValue]])
-    #?@(:cljs [[cljsjs.react]
-               [cljsjs.react.dom]
+    #?@(:cljs [["react"]
+               ["react-dom"]
                [goog.object :as gobj]])
     [com.fulcrologic.fulcro.components :as comp]
     [clojure.string :as str]))
