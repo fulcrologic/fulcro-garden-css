@@ -21,7 +21,6 @@
   sup svg switch symbol table tbody td text textPath textarea tfoot th thead time title tr track tref tspan
   u ul unknown use var video view vkern wbr)
 
-(def node com.fulcrologic.fulcro.dom/node)
 (def render-to-str com.fulcrologic.fulcro.dom/render-to-str)
 (def create-element com.fulcrologic.fulcro.dom/create-element)
 
