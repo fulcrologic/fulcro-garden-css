@@ -55,7 +55,7 @@
                           #?@(:clj [(instance? cljs.tagged_literals.JSValue p) (->JSValue (dissoc (.-val p) nm))])
                           (map? p) (dissoc p nm)
                           #?@(:cljs [(object? p) (do (gobj/remove p (name nm)) p)])))
-        (strip-prefix [s] (str/replace s #"^[:.#$]*" ""))]
+        (strip-prefix [s] (str/replace (str s) #"^[:.#$]*" ""))]
   (defn fold-in-classes
     "Update the :className prop in the given props to include the classes in the :classes entry of props. Works on js objects and CLJ maps as props.
     If using js props, they must be mutable."
