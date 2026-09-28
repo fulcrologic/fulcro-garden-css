@@ -1,5 +1,5 @@
 tests:
-	yarn
-	npx shadow-cljs compile ci-tests
-	npx karma start --single-run
+	pnpm install --frozen-lockfile
+	pnpm exec shadow-cljs compile ci-tests
+	pnpm exec karma start --single-run
 	clojure -A:provided:test:clj-tests

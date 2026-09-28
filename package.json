@@ -17,5 +17,9 @@
     "url": "git@github.com:fulcrologic/fulcro-garden-css.git"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "packageManager": "pnpm@11.21.0",
+  "scripts": {
+    "preinstall": "npx only-allow@1.2.2 pnpm"
+  }
 }
